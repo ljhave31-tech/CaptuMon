@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#111827">
+  <meta name="description" content="Capture and catalog items like a Pokédex entry">
+  <title>Captumon</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+  <div id="app">
+    <header class="app-header">
+      <h1>Captumon</h1>
+      <button id="resetBtn" class="icon-btn" aria-label="Reset data" title="Reset">⟳</button>
+    </header>
+
+    <main>
+      <section id="homeView" class="view active">
+        <div class="empty-state" id="emptyState">
+          <div class="empty-icon">📸</div>
+          <h2>No captures yet</h2>
+          <p>Start capturing items to build your collection.</p>
+        </div>
+
+        <div id="entriesGrid" class="entries-grid hidden"></div>
+      </section>
+
+      <section id="captureView" class="view">
+        <div class="camera-container">
+          <video id="video" autoplay playsinline muted></video>
+          <canvas id="photoCanvas" hidden></canvas>
+          <div id="cameraError" class="camera-error hidden">
+            <p>Camera access denied or unavailable.</p>
+            <button id="useFileBtn" class="btn btn-secondary">Choose from gallery</button>
+          </div>
+        </div>
+        <div class="capture-controls">
+          <button id="captureBtn" class="capture-btn">📷</button>
+          <button id="switchCameraBtn" class="icon-btn">🔄</button>
+          <input type="file" id="fileInput" accept="image/*" hidden>
+        </div>
+      </section>
+
+      <section id="detailView" class="view">
+        <button id="backBtn" class="back-btn">← Back</button>
+        <div id="detailCard" class="detail-card"></div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav">
+      <button id="navHome" class="nav-btn active">🏠</button>
+      <button id="navCapture" class="nav-btn">📷</button>
+    </nav>
+  </div>
+
+  <script src="scripts/storage.js"></script>
+  <script src="scripts/camera.js"></script>
+  <script src="scripts/ui.js"></script>
+  <script src="scripts/app.js"></script>
+</body>
+</html>
