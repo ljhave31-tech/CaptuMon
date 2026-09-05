@@ -57,7 +57,7 @@ Captumon is a mobile-focused web application that lets users capture items using
 - [ ] Widget support for home screen
 - [ ] Camera filters and effects
 - [ ] Batch import from gallery
-- [ ] Categories and smart tagging
+- [x] Categories and smart tagging
 - [ ] Map view for location-tagged captures
 - [ ] Watch face / wearable support
 

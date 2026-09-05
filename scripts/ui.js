@@ -37,7 +37,10 @@ function renderEntries(entries) {
         <div class="meta">
           <p class="title">${escapeHtml(e.title || 'Untitled Capture')}</p>
           <p class="date">${new Date(e.createdAt).toLocaleString()}</p>
-          ${e.confidence ? `<span class="confidence-badge">${e.confidence}%</span>` : ''}
+          <div class="badges">
+            ${e.category ? `<span class="category-badge">${escapeHtml(e.category)}</span>` : ''}
+            ${e.confidence ? `<span class="confidence-badge">${e.confidence}%</span>` : ''}
+          </div>
         </div>
       </article>
     `
@@ -54,7 +57,10 @@ function renderDetail(entry) {
     <div class="detail-body">
       <input class="detail-title" value="${escapeHtml(entry.title || '')}" placeholder="Give it a name" />
       <p class="detail-meta">${new Date(entry.createdAt).toLocaleString()}</p>
-      ${entry.label ? `<p class="ai-label">AI: ${escapeHtml(entry.label)} ${entry.confidence ? `(${entry.confidence}%)` : ''}</p>` : ''}
+      <div class="badges">
+        ${entry.category ? `<span class="category-badge">${escapeHtml(entry.category)}</span>` : ''}
+        ${entry.label ? `<span class="ai-label">AI: ${escapeHtml(entry.label)} ${entry.confidence ? `(${entry.confidence}%)` : ''}</span>` : ''}
+      </div>
       <div class="tags-row">${tagsHtml}</div>
       <textarea rows="3" placeholder="Add notes...">${escapeHtml(entry.notes || '')}</textarea>
       <div class="detail-actions">
@@ -82,7 +88,8 @@ function renderStats(entries) {
   const today = new Date().toDateString();
   const todayCount = entries.filter((e) => new Date(e.createdAt).toDateString() === today).length;
   const uniqueLabels = new Set(entries.map((e) => (e.label || '').toLowerCase()).filter(Boolean)).size;
-  ui.statsEl.textContent = `Captured: ${total} | Today: ${todayCount} | Species: ${uniqueLabels}`;
+  const categories = new Set(entries.map((e) => e.category).filter(Boolean)).size;
+  ui.statsEl.textContent = `Captured: ${total} | Today: ${todayCount} | Species: ${uniqueLabels} | Types: ${categories}`;
 }
 
 function escapeHtml(str) {

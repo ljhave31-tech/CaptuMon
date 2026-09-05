@@ -43,6 +43,7 @@ async function classifyAndSave(dataUrl) {
     notes: '',
     label: '',
     confidence: 0,
+    category: '',
     tags: [],
     createdAt: Date.now(),
   };
@@ -62,6 +63,7 @@ async function classifyAndSave(dataUrl) {
     entry.confidence = predictions[0].confidence;
     entry.title = predictions[0].label;
     entry.tags = predictions.slice(0, 3).map((p) => p.label);
+    entry.category = window.categories.suggestCategory(entry.label);
   }
 
   window.storage.addEntry(entry);
