@@ -45,14 +45,14 @@ Captumon is a mobile-focused web application that lets users capture items using
 
 ## Upgrades / Future Enhancements
 
-- [ ] AI-based image recognition (identify captured objects)
+- [x] AI-based image recognition (identify captured objects)
 - [ ] Barcode/QR code scanning
 - [ ] Voice notes for entries
 - [ ] AR overlay when viewing entries
 - [ ] Social features (friends, trading, leaderboards)
 - [ ] Cloud sync across devices
 - [ ] Export/import entries (JSON, CSV)
-- [ ] Statistics and streaks
+- [x] Statistics and streaks
 - [ ] Achievements/badges system
 - [ ] Widget support for home screen
 - [ ] Camera filters and effects
@@ -65,8 +65,9 @@ Captumon is a mobile-focused web application that lets users capture items using
 
 - HTML5 / CSS3 / Vanilla JavaScript (or framework TBD)
 - Service Workers for offline support
-- IndexedDB for local storage
+- localStorage for local persistence
 - Camera API (`navigator.mediaDevices.getUserMedia`)
+- TensorFlow.js + MobileNet for on-device image recognition
 
 ## Getting Started
 
@@ -88,6 +89,7 @@ open index.html
 ├── scripts/
 │   ├── app.js
 │   ├── camera.js
+│   ├── recognition.js
 │   ├── storage.js
 │   └── ui.js
 ├── assets/

@@ -281,6 +281,63 @@ main {
   border: 1px solid var(--border);
 }
 
+.stats-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.model-status {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.capture-status {
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.confidence-badge {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 2px 8px;
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--accent);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.ai-label {
+  margin: 8px 0 0;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.tag-chip {
+  padding: 4px 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--text);
+}
+
 .hidden {
   display: none !important;
 }

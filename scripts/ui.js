@@ -11,6 +11,9 @@ const ui = {
   canvas: document.getElementById('photoCanvas'),
   cameraError: document.getElementById('cameraError'),
   fileInput: document.getElementById('fileInput'),
+  modelStatus: document.getElementById('modelStatus'),
+  captureStatus: document.getElementById('captureStatus'),
+  statsEl: document.getElementById('statsEl'),
 };
 
 function showView(name) {
@@ -34,6 +37,7 @@ function renderEntries(entries) {
         <div class="meta">
           <p class="title">${escapeHtml(e.title || 'Untitled Capture')}</p>
           <p class="date">${new Date(e.createdAt).toLocaleString()}</p>
+          ${e.confidence ? `<span class="confidence-badge">${e.confidence}%</span>` : ''}
         </div>
       </article>
     `
@@ -42,11 +46,16 @@ function renderEntries(entries) {
 }
 
 function renderDetail(entry) {
+  const tagsHtml = (entry.tags || [])
+    .map((t) => `<span class="tag-chip">${escapeHtml(t)}</span>`)
+    .join('');
   ui.detailCard.innerHTML = `
     <img src="${entry.media}" alt="Capture">
     <div class="detail-body">
       <input class="detail-title" value="${escapeHtml(entry.title || '')}" placeholder="Give it a name" />
       <p class="detail-meta">${new Date(entry.createdAt).toLocaleString()}</p>
+      ${entry.label ? `<p class="ai-label">AI: ${escapeHtml(entry.label)} ${entry.confidence ? `(${entry.confidence}%)` : ''}</p>` : ''}
+      <div class="tags-row">${tagsHtml}</div>
       <textarea rows="3" placeholder="Add notes...">${escapeHtml(entry.notes || '')}</textarea>
       <div class="detail-actions">
         <button id="saveDetailBtn" class="btn">Save</button>
@@ -66,6 +75,14 @@ function renderDetail(entry) {
       window.app.deleteDetail(entry.id);
     }
   });
+}
+
+function renderStats(entries) {
+  const total = entries.length;
+  const today = new Date().toDateString();
+  const todayCount = entries.filter((e) => new Date(e.createdAt).toDateString() === today).length;
+  const uniqueLabels = new Set(entries.map((e) => (e.label || '').toLowerCase()).filter(Boolean)).size;
+  ui.statsEl.textContent = `Captured: ${total} | Today: ${todayCount} | Species: ${uniqueLabels}`;
 }
 
 function escapeHtml(str) {

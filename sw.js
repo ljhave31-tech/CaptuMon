@@ -1,5 +1,5 @@
 const CACHE = 'captumon-v1';
-const ASSETS = ['/', '/index.html', '/styles/main.css', '/scripts/storage.js', '/scripts/camera.js', '/scripts/ui.js', '/scripts/app.js', '/manifest.json'];
+const ASSETS = ['/', '/index.html', '/styles/main.css', '/scripts/storage.js', '/scripts/camera.js', '/scripts/ui.js', '/scripts/app.js', '/scripts/recognition.js', '/manifest.json'];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)));

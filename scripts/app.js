@@ -1,5 +1,7 @@
 const camera = new Camera(ui.video, ui.canvas);
 let cameraReady = false;
+let modelReady = false;
+let modelLoading = false;
 
 async function initCamera() {
   cameraReady = await camera.start();
@@ -12,6 +14,60 @@ async function initCamera() {
 function refreshHome() {
   const entries = window.storage.loadEntries();
   renderEntries(entries);
+  renderStats(entries);
+}
+
+function renderStats(entries) {
+  const total = entries.length;
+  const today = new Date().toDateString();
+  const todayCount = entries.filter((e) => new Date(e.createdAt).toDateString() === today).length;
+  const uniqueLabels = new Set(entries.map((e) => (e.label || '').toLowerCase()).filter(Boolean)).size;
+  ui.statsEl.textContent = `Captured: ${total} | Today: ${todayCount} | Species: ${uniqueLabels}`;
+}
+
+async function initModel() {
+  if (modelReady || modelLoading) return;
+  modelLoading = true;
+  ui.modelStatus.textContent = 'Loading AI...';
+  await window.recognition.ensureModel();
+  modelReady = true;
+  modelLoading = false;
+  ui.modelStatus.textContent = 'AI Ready';
+}
+
+async function classifyAndSave(dataUrl) {
+  const entry = {
+    id: crypto.randomUUID(),
+    media: dataUrl,
+    title: '',
+    notes: '',
+    label: '',
+    confidence: 0,
+    tags: [],
+    createdAt: Date.now(),
+  };
+
+  const img = new Image();
+  img.src = dataUrl;
+  await img.decode();
+
+  if (!modelReady) {
+    ui.captureStatus.textContent = 'Analyzing...';
+    await initModel();
+  }
+
+  const predictions = await window.recognition.classifyImage(img);
+  if (predictions.length) {
+    entry.label = predictions[0].label;
+    entry.confidence = predictions[0].confidence;
+    entry.title = predictions[0].label;
+    entry.tags = predictions.slice(0, 3).map((p) => p.label);
+  }
+
+  window.storage.addEntry(entry);
+  ui.captureStatus.textContent = '';
+  refreshHome();
+  showView('home');
 }
 
 window.app = {
@@ -21,33 +77,18 @@ window.app = {
       alert('Could not capture photo.');
       return;
     }
-    const entry = {
-      id: crypto.randomUUID(),
-      media: dataUrl,
-      title: '',
-      notes: '',
-      createdAt: Date.now(),
-    };
-    window.storage.addEntry(entry);
-    refreshHome();
-    showView('home');
+    ui.captureStatus.textContent = 'Analyzing...';
+    await classifyAndSave(dataUrl);
   },
 
   async pickFile(file) {
     try {
       const dataUrl = await camera.fromFile(file);
-      const entry = {
-        id: crypto.randomUUID(),
-        media: dataUrl,
-        title: '',
-        notes: '',
-        createdAt: Date.now(),
-      };
-      window.storage.addEntry(entry);
-      refreshHome();
-      showView('home');
+      ui.captureStatus.textContent = 'Analyzing...';
+      await classifyAndSave(dataUrl);
     } catch (e) {
       alert('Could not process selected image.');
+      ui.captureStatus.textContent = '';
     }
   },
 
@@ -122,5 +163,6 @@ if ('serviceWorker' in navigator) {
 }
 
 initCamera();
+initModel();
 refreshHome();
 showView('home');
